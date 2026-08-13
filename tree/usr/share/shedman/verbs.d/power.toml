@@ -1,0 +1,4 @@
+name = "power"
+package = "shedos-hyprland"
+man = "shedman-power.1"
+description = "open the power menu (lock/sleep/hibernate/reboot/shutdown)"

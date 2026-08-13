@@ -1,0 +1,5 @@
+name = "keybindings"
+package = "shedos-hyprland"
+man = "shedman-keybindings.1"
+description = "show all keybindings in a searchable dialog"
+completes = false

@@ -1,0 +1,4 @@
+name = "dock"
+package = "shedos-hyprland"
+man = "shedman-dock.1"
+description = "manage the ShedOS application dock (position, pinned apps, toggle)"

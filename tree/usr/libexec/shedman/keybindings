@@ -563,6 +563,11 @@ def main() -> int:
     if len(sys.argv) > 1 and sys.argv[1] == "--help-summary":
         print("show all keybindings in a searchable dialog")
         return 0
+    if len(sys.argv) > 1 and sys.argv[1] in (
+            "--complete-bash", "--complete-zsh", "--complete-fish"):
+        # Nothing to offer: the verb takes no flags. Without this the
+        # completers reached the dialog and a Tab press opened a window.
+        return 0
     if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):
         print(
             "Usage: shedman keybindings\n"

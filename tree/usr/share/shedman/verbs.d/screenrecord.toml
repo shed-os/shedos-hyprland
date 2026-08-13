@@ -1,0 +1,4 @@
+name = "screenrecord"
+package = "shedos-hyprland"
+man = "shedman-screenrecord.1"
+description = "start/stop screen recording (wf-recorder + waybar pill)"

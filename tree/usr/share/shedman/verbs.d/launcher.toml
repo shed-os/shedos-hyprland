@@ -1,0 +1,5 @@
+name = "launcher"
+package = "shedos-hyprland"
+man = "shedman-launcher.1"
+description = "open the Walker app launcher"
+completes = false

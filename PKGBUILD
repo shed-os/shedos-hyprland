@@ -33,6 +33,10 @@ depends=(
     # new config meets an old renderer — that mismatch falls back to
     # hardcoded Mocha (wrong palette) instead of the themed one.
     'shedos-system>=2026.05.17'
+    'shedman'             # the dispatcher the six verbs plug into
+    'python-tomlkit'      # `shedman dock` reads and rewrites dock.toml
+    'python-gobject'      # `shedman keybindings` builds its dialog with GTK
+    'gtk4'
     'hyprland'
     'waybar'
     'walker'
@@ -117,6 +121,13 @@ package() {
             "$pkgdir/usr/share/man/man1/$(basename "$_page")"
     done
 
+    # man5, for the dock's own config file. Same glob-not-allowlist rule.
+    install -d "$pkgdir/usr/share/man/man5"
+    for _page in man/build/*.5; do
+        install -Dm644 "$_page" \
+            "$pkgdir/usr/share/man/man5/$(basename "$_page")"
+    done
+
     # /etc/skel/; seed for new users via useradd -m. The bash pair stays
     # out of the payload — the bash package owns those two skel paths, so
     # the install scriptlet seeds them from the defaults mirror instead
@@ -146,15 +157,17 @@ package() {
         install -Dm644 gtk/settings.ini "$pkgdir/$_gtk"
     done
 
-    # DE-specific shedman subcommands: `shedman launcher` (Walker),
-    # `shedman power` (shutdown/reboot/logout confirm), and
-    # `shedman screenrecord` (wf-recorder wrapper + waybar indicator).
-    install -d "$pkgdir/usr/libexec/shedman"
-    local _libexec_shedman=(browser keybindings launcher power screenrecord)
-    local _name
-    for _name in "${_libexec_shedman[@]}"; do
+    # The desktop's shedman verbs. The declarations are the manifest: a verb
+    # ships because one names it, so a verb added without its declaration does
+    # not ship silently — it does not ship at all, and the pipeline's
+    # completeness check says which way round the mistake was.
+    local _decl _name
+    for _decl in tree/usr/share/shedman/verbs.d/*.toml; do
+        _name=$(sed -n 's/^name = "\(.*\)"$/\1/p' "$_decl")
         install -Dm755 "tree/usr/libexec/shedman/$_name" \
             "$pkgdir/usr/libexec/shedman/$_name"
+        install -Dm644 "$_decl" \
+            "$pkgdir/usr/share/shedman/verbs.d/$(basename "$_decl")"
     done
 
     install -Dm644 tree/usr/lib/systemd/user/shedos-hypr-reload.path \

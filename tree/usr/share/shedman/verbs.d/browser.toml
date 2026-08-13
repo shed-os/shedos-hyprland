@@ -1,0 +1,5 @@
+name = "browser"
+package = "shedos-hyprland"
+man = "shedman-browser.1"
+description = "launch the default web browser"
+completes = false
