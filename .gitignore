@@ -1,0 +1,14 @@
+# makepkg byproducts
+src/
+pkg/
+*.pkg.tar.zst
+*.pkg.tar.zst.sig
+
+# rendered man pages
+man/build/
+
+# what the pipeline collects a build into
+dist/
+
+# python bytecode from the suites loading the modules by path
+__pycache__/
