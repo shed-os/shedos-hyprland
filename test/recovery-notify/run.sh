@@ -7,7 +7,7 @@ set -uo pipefail
 
 here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo=$(cd -- "$here/../.." && pwd)
-tool=$repo/packaging/shedos-hyprland/tree/usr/libexec/shedos-hyprland/recovery-notify
+tool=$repo/tree/usr/libexec/shedos-hyprland/recovery-notify
 
 [[ -f $tool ]] || { echo "FATAL: $tool missing" >&2; exit 2; }
 

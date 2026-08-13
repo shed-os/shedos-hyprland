@@ -19,7 +19,7 @@ set -uo pipefail
 
 here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo_root=$(cd -- "$here/../.." && pwd)
-tool=$repo_root/packaging/shedos-hyprland/tree/usr/libexec/shedman/screenrecord
+tool=$repo_root/tree/usr/libexec/shedman/screenrecord
 
 if [[ ! -x $tool ]]; then
     echo "FATAL: $tool not executable" >&2

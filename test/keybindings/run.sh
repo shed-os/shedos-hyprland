@@ -19,9 +19,9 @@ import types
 from pathlib import Path
 
 repo = Path(sys.argv[1])
-hypr = repo / "packaging/shedos-hyprland/tree/etc/skel/.config/hypr"
-dialog = repo / "packaging/shedos-hyprland/tree/usr/libexec/shedman/keybindings"
-meta = repo / "packaging/shedos-hyprland/tree/usr/share/shedos-hyprland/keybindings-meta.toml"
+hypr = repo / "tree/etc/skel/.config/hypr"
+dialog = repo / "tree/usr/libexec/shedman/keybindings"
+meta = repo / "tree/usr/share/shedos-hyprland/keybindings-meta.toml"
 
 # The dialog imports GTK at module level; stub it so the parsers load
 # in a headless CI container.

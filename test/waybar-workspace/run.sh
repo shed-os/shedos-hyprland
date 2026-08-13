@@ -8,7 +8,7 @@ set -uo pipefail
 
 here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo_root=$(cd -- "$here/../.." && pwd)
-script=$repo_root/packaging/shedos-hyprland/tree/usr/lib/shedos/waybar-workspace
+script=$repo_root/tree/usr/lib/shedos/waybar-workspace
 
 fail=0
 _ok()  { echo "ok: $1"; }

@@ -6,7 +6,7 @@ set -uo pipefail
 
 here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo_root=$(cd -- "$here/../.." && pwd)
-skel=$repo_root/packaging/shedos-hyprland/tree/etc/skel
+skel=$repo_root/tree/etc/skel
 
 pass=0; fail=0; failures=()
 _ok()   { printf 'ok: %s\n' "$1"; pass=$((pass + 1)); }
