@@ -14,7 +14,7 @@ pkgver=2026.07.03
 pkgrel=2
 pkgdesc='ShedOS Hyprland desktop profile (dotfiles + DE helpers)'
 arch=('any')
-url='https://github.com/Theshedman/shedos'
+url='https://github.com/shed-os/shedos-hyprland'
 license=('GPL-3.0-or-later')
 # Retire blueman: the desktop ships overskride for Bluetooth now, so let
 # pacman drop blueman transactionally on upgrade. Existing installs only
@@ -90,6 +90,9 @@ optdepends=(
     'wf-recorder: required for `shedman screenrecord` (Super+R / waybar pill)'
 )
 
+source=("git+https://github.com/shed-os/shedos-hyprland.git#tag=$pkgver")
+sha256sums=('SKIP')
+
 # Where gtk/settings.ini installs: the system-wide pair, the per-user pair a
 # new account is seeded with, and the defaults mirror `shedman config --sync`
 # merges against.
@@ -104,7 +107,7 @@ _gtk_settings=(
 
 prepare() {
     # Render scdoc man sources; mirrors shedos-system's pattern.
-    cd "$startdir"
+    cd "$srcdir/shedos-hyprland"
     install -d man/build
     local src
     for src in man/*.scd; do
@@ -113,7 +116,7 @@ prepare() {
 }
 
 package() {
-    cd "$startdir"
+    cd "$srcdir/shedos-hyprland"
 
     # Man pages for the desktop-side shedman subcommands.
     install -d "$pkgdir/usr/share/man/man1"

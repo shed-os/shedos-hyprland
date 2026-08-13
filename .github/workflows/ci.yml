@@ -1,0 +1,24 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+# The build pushes the pkgrel bump back here when a release is already
+# published, and a reusable workflow cannot grant itself the write.
+permissions:
+  contents: write
+jobs:
+  pipeline:
+    uses: shed-os/shedos-ci/.github/workflows/package-pipeline.yml@main
+    with:
+      packages: '["."]'
+      # jq and zsh are what the suites reach for: the screenrecord and
+      # waybar-workspace harnesses parse JSON, and shell-config lints the
+      # shipped zsh files with the shell that reads them. The other three are
+      # for the verb contract, which runs each verb out of the built package
+      # with nothing else installed — `shedman dock` imports tomlkit and
+      # `shedman keybindings` imports GTK before either of them answers.
+      test_packages: >-
+        jq zsh python-tomlkit python-gobject gtk4
+    secrets:
+      SHEDOS_DISPATCH_TOKEN: ${{ secrets.SHEDOS_DISPATCH_TOKEN }}
