@@ -28,11 +28,16 @@ makedepends=(
 )
 depends=(
     # Version floor: the Lua Hyprland config dofile()s
-    # /etc/shedos/themes/current/palette.lua, which only shedos-system
-    # >=2026.05.17 renders. Pinning it forbids the half-update where the
-    # new config meets an old renderer — that mismatch falls back to
-    # hardcoded Mocha (wrong palette) instead of the themed one.
-    'shedos-system>=2026.05.17'
+    # /etc/shedos/themes/current/palette.lua, and the package that renders
+    # that file is the theme engine now. 2026.08.09 is the first engine
+    # release, which makes it the first version that can write the schema-1
+    # outputs the shipped config indexes. Pinning it forbids the half-update
+    # where the new config meets an old renderer — that mismatch falls back
+    # to hardcoded Mocha (wrong palette) instead of the themed one.
+    'shedos-theme-engine>=2026.08.09'
+    # Unversioned, and not the same edge: three waybar buttons exec
+    # /usr/lib/shedos/run-with-pause.sh, which shedos-system ships.
+    'shedos-system'
     'shedman'             # the dispatcher the six verbs plug into
     'python-tomlkit'      # `shedman dock` reads and rewrites dock.toml
     'python-gobject'      # `shedman keybindings` builds its dialog with GTK
