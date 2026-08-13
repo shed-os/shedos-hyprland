@@ -84,6 +84,18 @@ optdepends=(
     'wf-recorder: required for `shedman screenrecord` (Super+R / waybar pill)'
 )
 
+# Where gtk/settings.ini installs: the system-wide pair, the per-user pair a
+# new account is seeded with, and the defaults mirror `shedman config --sync`
+# merges against.
+_gtk_settings=(
+    etc/gtk-3.0/settings.ini
+    etc/gtk-4.0/settings.ini
+    etc/skel/.config/gtk-3.0/settings.ini
+    etc/skel/.config/gtk-4.0/settings.ini
+    usr/share/shedos/hyprland/defaults/.config/gtk-3.0/settings.ini
+    usr/share/shedos/hyprland/defaults/.config/gtk-4.0/settings.ini
+)
+
 prepare() {
     # Render scdoc man sources; mirrors shedos-system's pattern.
     cd "$startdir"
@@ -124,6 +136,15 @@ package() {
     # every future change to the shipped file. Skel seeds it for new
     # users; sync never touches it.
     rm "$pkgdir/usr/share/shedos/hyprland/defaults/.config/mimeapps.list"
+
+    # The GTK settings, from the one copy of them this repository keeps.
+    # GTK 3 and GTK 4 read the same keys and the mirror has to match the skel
+    # file it mirrors, so these are one file installed six times rather than
+    # six files that have to be kept saying the same thing.
+    local _gtk
+    for _gtk in "${_gtk_settings[@]}"; do
+        install -Dm644 gtk/settings.ini "$pkgdir/$_gtk"
+    done
 
     # DE-specific shedman subcommands: `shedman launcher` (Walker),
     # `shedman power` (shutdown/reboot/logout confirm), and
