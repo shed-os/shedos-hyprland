@@ -107,7 +107,7 @@ hl.bind("ALT + Tab", hl.dsp.exec_cmd("shedos-switcher"))
 hl.bind("ALT + SHIFT + Tab", hl.dsp.exec_cmd("shedos-switcher --prev"))
 
 -- Lock screen
-hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("/usr/libexec/shedman/lock"))
+hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("shedman lock"))
 
 -- System controls. The exit fallback uses the Lua dispatch syntax —
 -- the pre-0.55 `hyprctl dispatch exit` form no longer parses.
