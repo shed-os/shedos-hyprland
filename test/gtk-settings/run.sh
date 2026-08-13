@@ -31,9 +31,10 @@ else
     _fail G1_one_source "settings.ini in the tree: ${found[*]}"
 fi
 
-# G2: the six destinations the package writes it to, read out of the PKGBUILD
-# rather than restated here, so a destination dropped from the build is a
-# destination this suite goes red about.
+# G2: the six destinations, written down here and held against the array the
+# PKGBUILD actually carries. Both halves are stated, and that is what makes the
+# comparison mean anything — a destination dropped from the build stops matching
+# the six above, and one added without a decision does not match either.
 mapfile -t got < <(
     bash -c 'source "$1" > /dev/null 2>&1; printf "%s\n" "${_gtk_settings[@]}"' \
         _ "$repo_root/PKGBUILD" | sort
