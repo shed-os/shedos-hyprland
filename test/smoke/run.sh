@@ -21,6 +21,31 @@ _fail() { echo "FAIL: $1: $2" >&2; failures+=("$1"); ((fail++)); }
 
 TOOLS=(browser dock keybindings launcher power screenrecord)
 
+# Answering a completion query must cost nothing: a verb that reaches its real
+# work to say what flags it takes has already done the work. `keybindings` did
+# — its completion flags fell through to the dialog — and neither the exit code
+# nor the empty output says so, because a GTK application that cannot open a
+# display still exits 0 with nothing on stdout. What says so is the compositor
+# call the dialog makes before it gets there, so the completion queries below
+# run with a compositor that records being asked.
+stub=$(mktemp -d -t shedos-smoke.XXXXXX)
+trap 'rm -rf -- "$stub"' EXIT
+asked=$stub/asked.log
+cat > "$stub/hyprctl" <<STUB
+#!/usr/bin/env bash
+printf '%s\n' "\$*" >> "$asked"
+exit 1
+STUB
+chmod +x "$stub/hyprctl"
+
+# The verbs whose declaration says they answer completions with nothing. Read
+# from the declarations rather than listed here, so a verb that changes its
+# mind changes one file.
+declares_silence() {
+    local decl=$repo_root/tree/usr/share/shedman/verbs.d/$1.toml
+    grep -qE '^completes[[:space:]]*=[[:space:]]*false' "$decl"
+}
+
 for name in "${TOOLS[@]}"; do
     path=$repo_root/tree/usr/libexec/shedman/$name
     if [[ ! -x $path ]]; then
@@ -43,11 +68,16 @@ for name in "${TOOLS[@]}"; do
     fi
 
     for mode in --complete-bash --complete-zsh --complete-fish; do
-        timeout 10 "$path" "$mode" >/dev/null 2>&1; rc=$?
-        if (( rc == 0 )); then
-            _ok "${name}${mode//-/_}"
-        else
+        : > "$asked"
+        out=$(PATH="$stub:$PATH" timeout 10 "$path" "$mode" 2>/dev/null); rc=$?
+        if (( rc != 0 )); then
             _fail "${name}${mode//-/_}" "rc=$rc"
+        elif [[ -s $asked ]]; then
+            _fail "${name}${mode//-/_}" "asked the compositor: $(tr '\n' ' ' < "$asked")"
+        elif declares_silence "$name" && [[ -n ${out//[[:space:]]/} ]]; then
+            _fail "${name}${mode//-/_}" "declares completes = false and answered: $out"
+        else
+            _ok "${name}${mode//-/_}"
         fi
     done
 done
